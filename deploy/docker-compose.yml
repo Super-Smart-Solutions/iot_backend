@@ -1,0 +1,73 @@
+version: '3.9'
+
+services:
+  api: &main_app
+    build:
+      context: .
+      dockerfile: ./deploy/Dockerfile
+      target: prod
+    image: iot_backend:${IOT_BACKEND_VERSION:-latest}
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      IOT_BACKEND_HOST: 0.0.0.0
+      IOT_BACKEND_DB_HOST: iot_backend-db
+      IOT_BACKEND_DB_PORT: 5432
+      IOT_BACKEND_DB_USER: iot_backend
+      IOT_BACKEND_DB_PASS: iot_backend
+      IOT_BACKEND_DB_BASE: iot_backend
+      IOT_BACKEND_REDIS_HOST: iot_backend-redis
+
+  db:
+    image: postgres:13.8-bullseye
+    hostname: iot_backend-db
+    environment:
+      POSTGRES_PASSWORD: "iot_backend"
+      POSTGRES_USER: "iot_backend"
+      POSTGRES_DB: "iot_backend"
+    volumes:
+      - iot_backend-db-data:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: pg_isready -U iot_backend
+      interval: 2s
+      timeout: 3s
+      retries: 40
+
+  migrator:
+    image: iot_backend:${IOT_BACKEND_VERSION:-latest}
+    restart: "no"
+    command: alembic upgrade head
+    environment:
+      IOT_BACKEND_DB_HOST: iot_backend-db
+      IOT_BACKEND_DB_PORT: 5432
+      IOT_BACKEND_DB_USER: iot_backend
+      IOT_BACKEND_DB_PASS: iot_backend
+      IOT_BACKEND_DB_BASE: iot_backend
+    depends_on:
+      db:
+        condition: service_healthy
+
+  redis:
+    image: bitnami/redis:6.2.5
+    hostname: "iot_backend-redis"
+    restart: always
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
+    healthcheck:
+      test: redis-cli ping
+      interval: 1s
+      timeout: 3s
+      retries: 50
+
+
+
+volumes:
+  iot_backend-db-data:
+    name: iot_backend-db-data
