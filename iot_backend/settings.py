@@ -56,6 +56,16 @@ class Settings(BaseSettings):
     redis_pass: Optional[str] = None
     redis_base: Optional[int] = None
 
+    # InfluxDB
+    InfluxDB_URL: str = "http://127.0.0.1:8086"
+    InfluxDB_ORG: str = "mainflux"
+    InfluxDB_TOKEN: str = "mainflux-token"
+    InfluxDB_BUCKET: str = "mainflux-bucket"
+    
+    #Mainflux
+    mainflux_host: str = "http://127.0.0.1"
+    mainflux_token: str
+    
     # This variable is used to define
     # multiproc_dir. It's required for [uvi|guni]corn projects.
     prometheus_dir: Path = TEMP_DIR / "prom"

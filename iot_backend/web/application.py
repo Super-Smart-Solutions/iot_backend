@@ -4,12 +4,24 @@ from pathlib import Path
 
 import sentry_sdk
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import UJSONResponse
 from fastapi.staticfiles import StaticFiles
 from sentry_sdk.integrations.fastapi import FastApiIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
+from sqladmin import Admin
+from sqlalchemy.ext.asyncio import create_async_engine
 
+from iot_backend.admin import (
+    AlertView,
+    DeviceView,
+    GroupView,
+    OrganizationView,
+    TagView,
+    UserView,
+    authentication_backend,
+)
 from iot_backend.logging import configure_logging
 from iot_backend.settings import settings
 from iot_backend.web.api.router import api_router
@@ -52,7 +64,13 @@ def get_app() -> FastAPI:
         openapi_url="/api/openapi.json",
         default_response_class=UJSONResponse,
     )
-
+    # Adds CORS middleware
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],  # Replace "*" with your desired origins
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
     # Adds startup and shutdown events.
     register_startup_event(app)
     register_shutdown_event(app)
@@ -67,4 +85,17 @@ def get_app() -> FastAPI:
         name="static",
     )
 
+    admin = Admin(
+        app=app,
+        authentication_backend=authentication_backend,
+        engine=create_async_engine(str(settings.db_url), echo=settings.db_echo),
+        debug=True,
+        # templates_dir="app/admin/templates"
+    )
+    admin.add_view(UserView)
+    admin.add_view(OrganizationView)
+    admin.add_view(GroupView)
+    admin.add_view(DeviceView)
+    admin.add_view(AlertView)
+    admin.add_view(TagView)
     return app

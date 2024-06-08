@@ -32,6 +32,10 @@ prometheus-client = "^0.17.0"
 prometheus-fastapi-instrumentator = "6.0.0"
 sentry-sdk = "^1.27.1"
 loguru = "^0.7.0"
+sqladmin = "^0.17.0"
+itsdangerous = "^2.2.0"
+influxdb-client = "^1.43.0"
+mainflux-client = {git = "git@github.com:ahmedelgamal0/mainflux_python_client.git"}
 
 
 [tool.poetry.dev-dependencies]
