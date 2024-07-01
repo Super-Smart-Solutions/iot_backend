@@ -128,7 +128,7 @@
 #         return self.checks_service.patch_checks_id(
 #             check_id=check_id, check_patch={"status": TaskStatusType.ACTIVE}
 #         )
-    
+
 #     def delete_check(self, check_id: str):
 #         """
 #         Deletes a check (threshold) from InfluxDB.
@@ -141,7 +141,7 @@
 #         Returns:
 #             The response object from the InfluxDB API call for deleting the check.
 #         """
-#         return self.checks_service.delete_checks_id(check_id=check_id)    
+#         return self.checks_service.delete_checks_id(check_id=check_id)
 #     def build_query(self, node_id, channel_id) -> str:
 #         """
 #         Builds an InfluxDB Flux query to retrieve data.

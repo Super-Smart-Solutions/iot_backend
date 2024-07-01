@@ -1,8 +1,7 @@
 from fastapi.routing import APIRouter
 
-from iot_backend.web.api import (
+from iot_backend.web.api import (  # alerts,
     actions,
-    # alerts,
     devices,
     docs,
     dummy,
@@ -25,13 +24,17 @@ api_router.include_router(echo.router, prefix="/echo", tags=["echo"])
 api_router.include_router(dummy.router, prefix="/dummy", tags=["dummy"])
 api_router.include_router(redis.router, prefix="/redis", tags=["redis"])
 api_router.include_router(
-    organizations.router, prefix="/organizations", tags=["Organizations"]
+    organizations.router,
+    prefix="/organizations",
+    tags=["Organizations"],
 )
 api_router.include_router(groups.router, prefix="/groups", tags=["Groups"])
 api_router.include_router(devices.router, prefix="/devices", tags=["Devices"])
 # api_router.include_router(alerts.router, prefix="/alerts", tags=["Alerts"])
 api_router.include_router(
-    notifications.router, prefix="/notifications", tags=["Notifications"]
+    notifications.router,
+    prefix="/notifications",
+    tags=["Notifications"],
 )
 api_router.include_router(tags.router, prefix="/tags", tags=["Tags"])
 api_router.include_router(records.router, prefix="/records", tags=["Records"])
