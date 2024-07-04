@@ -30,14 +30,9 @@ jobs:
           python-version: '3.9'
 
       - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          export PATH="$HOME/.local/bin:$PATH"
-
-      - name: Install dependencies
-        run: |
-          poetry install
-
+        uses: knowsuchagency/poetry-install@v1
+        env:
+          POETRY_VIRTUALENVS_CREATE: false
       - name: Run FastAPI
         run: |
           poetry run python -m iot_backend &
