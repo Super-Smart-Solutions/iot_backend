@@ -13,7 +13,7 @@ router = APIRouter()
 
 @router.post(
     "/",
-    dependencies=[Depends(current_active_user)],
+    dependencies=[Depends(current_active_user)], status_code=status.HTTP_201_CREATED,
 )
 async def send(
     device_id: int,
