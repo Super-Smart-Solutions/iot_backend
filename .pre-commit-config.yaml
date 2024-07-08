@@ -61,3 +61,11 @@ repos:
             pass_filenames: false
             args:
               - "iot_backend"
+        
+    - repo: local
+      hooks:
+        - id: generate-json-api-doc
+          name: Generate JSON API Documentation
+          entry: bash generate_json_api_doc.sh
+          language: script
+          always_run: true

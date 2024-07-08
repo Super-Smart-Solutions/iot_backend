@@ -36,6 +36,7 @@ sqladmin = "^0.17.0"
 itsdangerous = "^2.2.0"
 influxdb-client = "^1.43.0"
 mainflux-client = {git = "git@github.com:ahmedelgamal0/mainflux_python_client.git"}
+pre-commit = "^3.7.1"
 
 
 [tool.poetry.dev-dependencies]
