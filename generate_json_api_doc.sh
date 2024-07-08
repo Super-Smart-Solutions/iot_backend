@@ -17,7 +17,7 @@ npm install -g redoc-cli
 
 # Generate Redoc HTML
 mkdir -p docs
-redoc-cli bundle api_doc.json -o iot_backend/docs/index.html
+redoc-cli bundle api_doc.json -o index.html
 
 
 # # Switch to gh-pages branch
