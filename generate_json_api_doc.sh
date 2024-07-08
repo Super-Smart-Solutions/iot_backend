@@ -20,13 +20,13 @@ mkdir -p docs
 redoc-cli bundle api_doc.json -o iot_backend/docs/index.html
 
 
-# Switch to gh-pages branch
-git checkout gh-pages || git checkout -b gh-pages
+# # Switch to gh-pages branch
+# git checkout gh-pages || git checkout -b gh-pages
 
-# Copy generated docs
-cp -r docs/* .
+# # Copy generated docs
+# cp -r docs/* .
 
-# Commit and push changes
-git add index.html
-git commit -m "Update API documentation"
-git push origin gh-pages
+# # Commit and push changes
+# git add index.html
+# git commit -m "Update API documentation"
+# git push origin gh-pages
