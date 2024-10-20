@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "iot_backend"
-version = "0.1.0"
+version = "1.0.0"
 description = ""
 authors = [
 
@@ -11,7 +11,7 @@ maintainers = [
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.10, <4.0"
 fastapi = "^0.100.0"
 uvicorn = { version = "^0.22.0", extras = ["standard"] }
 gunicorn = "^21.2.0"
@@ -35,8 +35,9 @@ loguru = "^0.7.0"
 sqladmin = "^0.17.0"
 itsdangerous = "^2.2.0"
 influxdb-client = "^1.43.0"
-mainflux-client = {git = "git@github.com:ahmedelgamal0/mainflux_python_client.git"}
 pre-commit = "^3.7.1"
+mainflux_client = { path = "libs/client_sdk" }
+
 
 
 [tool.poetry.dev-dependencies]
