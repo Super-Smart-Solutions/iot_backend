@@ -5,17 +5,18 @@ RUN apt-get update && apt-get install -y \
   && rm -rf /var/lib/apt/lists/*
 
 # Install Poetry
-RUN pip install poetry==1.4.2
+RUN pip install poetry==1.7.1
 
 # Configuring Poetry
 RUN poetry config virtualenvs.create false
 
 # Copy pyproject.toml and poetry.lock files
 COPY pyproject.toml poetry.lock /app/src/
+COPY libs/client_sdk /app/src/libs/client_sdk
 WORKDIR /app/src
 
 # Initialize submodule and install dependencies
-RUN git submodule update --init --recursive
+#RUN git submodule update --init --recursive
 RUN poetry install --only main
 
 # Removing gcc after dependencies are installed
