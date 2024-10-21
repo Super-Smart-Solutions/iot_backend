@@ -19,6 +19,7 @@ class DeviceBase(BaseModel):
     mainflux_thing_uuid: Optional[UUID] = None
     mainflux_thing_secret: Optional[UUID] = None
     parent_id: Optional[int] = None
+    org_id: Optional[int] = None
 
 
 class DeviceInputDTO(DeviceBase):
@@ -38,6 +39,6 @@ class DeviceDTO(BaseModel):
     updated_at: datetime
     parent_id: Optional[int] = None
     user_id: UUID
-    org_id: int
+    org_id: Optional[int] = None
 
     model_config = ConfigDict(from_attributes=True)

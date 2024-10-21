@@ -63,8 +63,8 @@ class Settings(BaseSettings):
     InfluxDB_BUCKET: str = "mainflux-bucket"
     
     #Mainflux
-    mainflux_host: str = "http://127.0.0.1"
-    mainflux_token: str
+    mainflux_host: str = ""
+    mainflux_token: str = ""
     
     # This variable is used to define
     # multiproc_dir. It's required for [uvi|guni]corn projects.

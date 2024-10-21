@@ -1,6 +1,6 @@
 from typing import Annotated, Optional
 
-from fastapi import APIRouter, HTTPException, Query, Request, status
+from fastapi import APIRouter, HTTPException, Query, status
 from fastapi.param_functions import Depends
 from mainflux_client.models.messages_page import MessagesPage
 from mainflux_client.rest import ApiException
@@ -17,7 +17,7 @@ router = APIRouter()
 
 @router.get(
     "/{tag_name}/records",
-    response_model=MessagesPage,
+    # response_model=MessagesPage,
     dependencies=[Depends(current_active_user)],
 )
 async def receive(
@@ -33,7 +33,7 @@ async def receive(
         Optional[Annotated[int, Query(ge=0)]],
         Query(description="Number of items to skip during retrieval."),
     ] = None,
-) -> MessagesPage:
+):
     """
     Receives records from a channel.
 

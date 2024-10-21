@@ -25,8 +25,8 @@ async def get_devices(
     :param device_dao: DAO for device models.
     :return: list of device objects from database.
     """
-    return await device_dao.get_all_devices(user_id=user.id, limit=limit, offset=offset)
-
+    devices = await device_dao.get_all_devices(user_id=user.id, limit=limit, offset=offset)
+    return [DeviceDTO.model_validate(device) for device in devices]
 
 @router.post(
     "/",

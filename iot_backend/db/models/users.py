@@ -53,15 +53,15 @@ class UserRead(schemas.BaseUser[uuid.UUID]):
 class UserCreate(schemas.BaseUserCreate):
     """Represents a create command for a user."""
 
-    organization_id: int
-    group_id: int
+    organization_id: int = None
+    group_id: int = None
 
 
 class UserUpdate(schemas.BaseUserUpdate):
     """Represents an update command for a user."""
 
-    organization_id: int
-    group_id: int
+    organization_id: int = None
+    group_id: int = None
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):

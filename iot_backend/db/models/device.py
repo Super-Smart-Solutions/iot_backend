@@ -37,8 +37,8 @@ class Device(Base):
     parent_id = Column(
         Integer, ForeignKey("devices.id"), nullable=True
     )  # One-to-One Relationship
-    user_id = Column(UUID, ForeignKey("user.id"))
-    org_id = Column(Integer, ForeignKey("organizations.id"))
+    user_id = Column(UUID, ForeignKey("user.id"), nullable=True)
+    org_id = Column(Integer, ForeignKey("organizations.id"), nullable=True)
 
     parent = relationship("Device", remote_side=[id])
 
