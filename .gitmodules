@@ -1,0 +1,3 @@
+[submodule "libs/client_sdk"]
+	path = libs/client_sdk
+	url = https://github.com/Super-Smart-Solutions/mainflux_client.git
