@@ -5,9 +5,7 @@ from mainflux_client import (
     ThingsApi,
     ChannelsApi,
     MessagesApi,
-    ReadersApi,
-    UsersApi,
-    PoliciesApi
+    UsersApi
     )
 from iot_backend.settings import settings
 
@@ -87,7 +85,7 @@ def get_messages_api(thing_secret: str) -> MessagesApi:
     return MessagesApi(api_client)
 
 
-def get_reader_api(access_token: str) -> ReadersApi:
+def get_reader_api(access_token: str) -> MessagesApi:
     """
     Get Mainflux Messages API client instance.
 
@@ -99,7 +97,7 @@ def get_reader_api(access_token: str) -> ReadersApi:
     """
     config = get_mainflux_config(access_token=access_token, port=9009)
     api_client = get_api_client(config)
-    return ReadersApi(api_client)
+    return MessagesApi(api_client)
 
 
 def get_users_api() -> UsersApi:
@@ -117,19 +115,19 @@ def get_users_api() -> UsersApi:
     return UsersApi(api_client)
 
 
-def get_policies_api(access_token: str) -> PoliciesApi:
-    """
-    Get Mainflux Policies API client instance.
+# def get_policies_api(access_token: str) -> PoliciesApi:
+#     """
+#     Get Mainflux Policies API client instance.
 
-    Args:
-        api_client (ApiClient): Mainflux API client.
+#     Args:
+#         api_client (ApiClient): Mainflux API client.
 
-    Returns:
-        PoliciesApi: Mainflux Policies API client instance.
-    """
-    config = get_mainflux_config(access_token=access_token)
-    api_client = get_api_client(config)
-    return PoliciesApi(api_client)
+#     Returns:
+#         PoliciesApi: Mainflux Policies API client instance.
+#     """
+#     config = get_mainflux_config(access_token=access_token)
+#     api_client = get_api_client(config)
+#     return PoliciesApi(api_client)
 
 def get_channel_id(uuid: str = None, name: str = None) -> str:
     """
