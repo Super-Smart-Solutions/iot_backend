@@ -7,6 +7,7 @@ from sqladmin import ModelView
 from iot_backend.db.models.alert import Alert
 from iot_backend.db.models.device import Device
 from iot_backend.db.models.group import Group
+from iot_backend.db.models.message import Message
 from iot_backend.db.models.organization import Organization
 from iot_backend.db.models.tag import Tag
 from iot_backend.db.models.users import User
@@ -70,3 +71,6 @@ class TagView(ModelView, model=Tag):
         "target",
         "unit",
     ]
+
+class MessageView(ModelView, model=Message):
+    column_exclude_list =["id"]

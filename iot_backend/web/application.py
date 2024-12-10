@@ -20,6 +20,7 @@ from iot_backend.admin import (
     OrganizationView,
     TagView,
     UserView,
+    MessageView,
     authentication_backend,
 )
 from iot_backend.logging import configure_logging
@@ -98,4 +99,6 @@ def get_app() -> FastAPI:
     admin.add_view(DeviceView)
     admin.add_view(AlertView)
     admin.add_view(TagView)
+    admin.add_view(MessageView)
+
     return app

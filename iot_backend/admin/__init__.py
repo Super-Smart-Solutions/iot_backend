@@ -6,4 +6,5 @@ from iot_backend.admin.models import (
     OrganizationView,
     TagView,
     UserView,
+    MessageView
 )
