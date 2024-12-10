@@ -1,19 +1,17 @@
+from datetime import datetime
 from pydantic import BaseModel
 
 
-class OrganizationDTO(BaseModel):
-    """
-    DTO for organizations.
-
-    It is returned when accessing organizations from the API.
-    """
+class OrganizationResponse(BaseModel): 
+    """Represents an organization with an ID and name."""
 
     id: int
     name: str
-    # organization_config = ConfigDict(from_attributes=True)
+    created_at: datetime
+    updated_at: datetime
 
 
-class OrganizationInputDTO(BaseModel):
-    """DTO for creating a new organization."""
+class OrganizationCreate(BaseModel):
+    """Represents the data required to create a new organization."""
 
     name: str

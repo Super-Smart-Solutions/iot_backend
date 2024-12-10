@@ -4,46 +4,30 @@ from fastapi import Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from iot_backend.db.dao.base_dao import BaseDAO
 from iot_backend.db.dependencies import get_db_session
 from iot_backend.db.models.organization import Organization
+from iot_backend.web.api.organizations.schema import OrganizationCreate
 
 
-class OrganizationDAO:
-    """Class for accessing organization table."""
-
+class OrganizationDAO(BaseDAO[Organization]):
     def __init__(self, session: AsyncSession = Depends(get_db_session)):
-        self.session = session
+        super().__init__(Organization, session)
 
-    async def create_organization_model(self, name: str) -> None:
+    async def create(self, name: str, schema: OrganizationCreate) -> Organization:
         """
         Add single organization to session.
 
         :param name: name of an organization.
+        :param schema: The Pydantic schema representing the organization data.
         """
-        # Check if there is a organization by the same name.
         existing_organization = await self.filter(name=name)
         if existing_organization:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Organization name must be unique",
             )
-        self.session.add(Organization(name=name))
-
-    async def get_all_organizations(
-        self, limit: int, offset: int
-    ) -> List[Organization]:
-        """
-        Get all organization models with limit/offset pagination.
-
-        :param limit: limit of organizations.
-        :param offset: offset of organizations.
-        :return: stream of organizations.
-        """
-        raw_organizations = await self.session.execute(
-            select(Organization).limit(limit).offset(offset),
-        )
-
-        return list(raw_organizations.scalars().fetchall())
+        return await super().create(schema=schema)
 
     async def filter(
         self,
@@ -55,39 +39,8 @@ class OrganizationDAO:
         :param name: name of organization instance.
         :return: organization models.
         """
-        query = select(Organization)
+        query = select(self.model)
         if name:
-            query = query.where(Organization.name == name)
+            query = query.where(self.model.name == name)
         rows = await self.session.execute(query)
-        return list(rows.scalars().fetchall())
-
-    async def update_organization(
-        self, organization_id: int, name: str
-    ) -> Optional[Organization]:
-        """
-        Update the name of an organization model.
-
-        :param organization_id: ID of the organization model.
-        :param name: new name for the organization model.
-        :return: updated organization model or None if not found.
-        """
-        query = select(Organization).where(Organization.id == organization_id)
-        row = await self.session.execute(query)
-        organization = row.scalar_one_or_none()
-        if organization:
-            organization.name = name
-        return organization
-
-    async def delete_organization(self, organization_id: int) -> Optional[Organization]:
-        """
-        Delete an organization model by its ID.
-
-        :param organization_id: ID of the organization model.
-        :return: deleted organization model or None if not found.
-        """
-        query = select(Organization).where(Organization.id == organization_id)
-        row = await self.session.execute(query)
-        organization = row.scalar_one_or_none()
-        if organization:
-            self.session.delete(organization)
-        return organization
+        return list(rows.scalars().all())
