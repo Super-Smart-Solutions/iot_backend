@@ -50,6 +50,8 @@ class Device(Base):
 
     # one-to-many relationship between Device and Tag
     tags = relationship("Tag", backref="device")
+    
+    messages = relationship("Message", back_populates="device")
 
     def configure(self):
         pass
