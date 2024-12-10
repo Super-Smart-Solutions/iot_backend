@@ -13,6 +13,7 @@ from iot_backend.web.api import (  # alerts,
     redis,
     tags,
     users,
+    messages
 )
 
 api_router = APIRouter()
@@ -37,3 +38,5 @@ api_router.include_router(
 api_router.include_router(tags.router, prefix="/tags", tags=["Tags"])
 api_router.include_router(records.router, prefix="/records", tags=["Records"])
 api_router.include_router(actions.router, prefix="/actions", tags=["Actions"])
+api_router.include_router(messages.router, prefix="/channels", tags=["messages"])
+
