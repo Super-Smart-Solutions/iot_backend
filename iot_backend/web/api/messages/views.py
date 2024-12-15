@@ -1,20 +1,46 @@
 from fastapi import APIRouter, Depends
 
+from iot_backend.db.dao.device_dao import DeviceDAO
 from iot_backend.db.dao.message_dao import MessageDAO
+from iot_backend.db.dao.tag_dao import TagDAO
+from iot_backend.db.models.device import Device
+from iot_backend.db.models.tag import Tag
 from iot_backend.web.api.messages.schema import MessageCreate
+from iot_backend.db.models.users import User, current_active_user
+
 
 router = APIRouter()
 
 
-@router.post("/{channel_id}/messages")
+@router.post("/{tag_id}/messages")
 async def send_message(
-    channel_id: str, message: MessageCreate, message_dao: MessageDAO = Depends()
+    tag_id: int,
+    device_id: int,
+    message: MessageCreate,
+    message_dao: MessageDAO = Depends(),
+    tag_dao: TagDAO = Depends(),
+    device_dao: DeviceDAO = Depends(),
+    user: User = Depends(current_active_user),
+
 ):
     """Creates Message model in the database."""
-    return await message_dao.create(channel_id=channel_id, schema=message)
+    # TODO Valid id/name helper function
+
+    tag: Tag = tag_dao.get_tag(tag_id, user.id)
+    device: Device = device_dao.get_device(device_id, user.id)
+    message.publisher = device.mainflux_thing_uuid
+    message.channel_id = tag.mainflux_channel_uuid
+
+    return await message_dao.create(tag_id=tag.id, schema=message)
 
 
-@router.get("/{channel_id}/messages")
-async def get_messages(channel_id: str, message_dao: MessageDAO = Depends()):
+@router.get("/{tag_id}/messages")
+async def read_messages(
+    tag_id: int,
+    message_dao: MessageDAO = Depends(),
+    tag_dao: TagDAO = Depends(),
+    user: User = Depends(current_active_user),
+):
     """Retrieves messages sent to single channel"""
-    return await message_dao.get_by("channel_id", channel_id)
+    tag: Tag = tag_dao.get_tag(tag_id, user.id)
+    return await message_dao.get_by("tag_id", tag.id)

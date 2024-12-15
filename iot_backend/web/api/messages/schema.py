@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 class MessageCreate(BaseModel):
     """Schema for creating message."""
-
+    channel_id: str
     publisher: str
     base_name: str | None
     base_time: float | None

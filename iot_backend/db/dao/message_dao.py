@@ -1,3 +1,4 @@
+from uuid import UUID
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -11,9 +12,11 @@ class MessageDAO(BaseDAO[Message]):
         super().__init__(Message, session)
 
 
-    async def create(self, channel_id:str, schema):
+    async def create(self, tag_id: int, device_id: int, user_id: UUID, schema):
         record_data = schema.model_dump()
-        record_data["channel_id"] = channel_id
+        record_data["tag_id"] = tag_id
+        record_data["device_id"] = device_id
+        record_data["user_id"] = user_id
         instance = self.model(**record_data)
         self.session.add(instance)
         await self.session.commit()
