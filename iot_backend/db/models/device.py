@@ -53,6 +53,9 @@ class Device(Base):
     
     messages = relationship("Message", back_populates="device")
 
+    actions = relationship("Action", back_populates="device")
+
+
     def configure(self):
         pass
 

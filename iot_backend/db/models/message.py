@@ -25,14 +25,15 @@ class Message(Base):
     unit = Column(String(100), nullable=False)
     value = Column(Float, nullable=False)
     time = Column(Integer, nullable=False)
-
     string_value = Column(String(255), nullable=True)
     bool_value = Column(Boolean, nullable=True)
     data_value = Column(String(255), nullable=True)
     sum_value = Column(Float, nullable=True)
 
     device_id = Column(Integer, ForeignKey("devices.id"), nullable=True)
+    tag_id = Column(Integer, ForeignKey("tags.id"), nullable=True)
     user_id = Column(UUID, ForeignKey("user.id"), nullable=True)
 
     device = relationship("Device", back_populates="messages")
+    tag = relationship("Tag", back_populates="messages")
     user = relationship("User", back_populates="messages")
