@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar, List, Optional
+from typing import Any, Generic, TypeVar, List, Optional, Union
 
 from fastapi import Depends
 from pydantic import BaseModel
@@ -63,6 +63,31 @@ class BaseDAO(Generic[ModelType]):
             select(self.model).where(self.model.id == id)
         )
         return result.scalars().one_or_none()
+
+    async def get_by(
+        self,
+        field: str,
+        value: Any,
+        unique: bool = False,
+    ) -> Union[Optional[ModelType], List[ModelType]]:
+        """Retrieves records based on a field and value.
+
+        Args:
+            field (str): The name of the field to filter by.
+            value (Any): The value to filter for.
+            unique (bool): Whether to return a single record or all matching records. Defaults to False.
+
+        Returns:
+            Union[Optional[ModelType], List[ModelType]]: The retrieved record(s) or None if not found.
+        """  # noqa: E501
+        query = select(self.model).filter(
+            getattr(self.model, field) == value,
+        )
+
+        result = await self.session.execute(query)
+        if unique:
+            return result.scalars().first()
+        return list(result.scalars().all())
 
     async def create(self, schema: SchemaType) -> ModelType:
         """

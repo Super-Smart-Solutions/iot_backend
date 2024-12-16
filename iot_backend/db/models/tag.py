@@ -12,6 +12,7 @@ from sqlalchemy import (
     Integer,
     String,
 )
+from sqlalchemy.orm import relationship
 
 from iot_backend.db.base import Base
 
@@ -21,7 +22,8 @@ class Tag(Base):
 
     id = Column(Integer, primary_key=True, unique=True)
     uuid = Column(UUID(as_uuid=True), default=uuid4, unique=True, nullable=False)
-    name = Column(String, nullable=False)
+    mainflux_channel_uuid = Column(UUID, nullable=True)
+    name = Column(String, nullable=False, unique=True)
     label = Column(String, nullable=False)
     target = Column(Integer, nullable=True)
     unit = Column(String, nullable=True)
@@ -34,6 +36,8 @@ class Tag(Base):
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    messages = relationship("Message", back_populates="tag")
 
     def __str__(self) -> str:
         return self.name

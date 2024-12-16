@@ -39,6 +39,8 @@ class User(SQLAlchemyBaseUserTableUUID, Base):
     # one-to-many relationship between User and Tag
     tags = relationship("Tag", backref="user")
 
+    messages = relationship("Message", back_populates="user")
+
     def __str__(self) -> str:
         return self.email
 
