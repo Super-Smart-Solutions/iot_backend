@@ -1,8 +1,8 @@
-from fastapi import APIRouter, status
-from fastapi.param_functions import Depends
-
+from fastapi import APIRouter, HTTPException, status, Depends
 from iot_backend.db.dao.device_dao import DeviceDAO
+from iot_backend.db.dao.action_dao import ActionDAO
 from iot_backend.db.models.users import User, current_active_user
+from iot_backend.web.api.actions.schema import ActionRead
 from iot_backend.web.api.devices.schema import DeviceDTO, DeviceInputDTO
 
 router = APIRouter()
@@ -25,8 +25,11 @@ async def get_devices(
     :param device_dao: DAO for device models.
     :return: list of device objects from database.
     """
-    devices = await device_dao.get_all_devices(user_id=user.id, limit=limit, offset=offset)
+    devices = await device_dao.get_all_devices(
+        user_id=user.id, limit=limit, offset=offset
+    )
     return [DeviceDTO.model_validate(device) for device in devices]
+
 
 @router.post(
     "/",
@@ -119,3 +122,21 @@ async def link_device_to_user(
     :param device_dao: DAO for device models.
     """
     await device_dao.patch_device_user_id(user_id=user.id, device_id=device_id)
+
+
+@router.get(
+    "/{device_id}/actions",
+    response_model=list[ActionRead],
+    dependencies=[Depends(current_active_user)],
+)
+async def get_device_actions(
+    device_id: int,
+    action_dao: ActionDAO = Depends(),
+):
+    """
+    Fetch all actions linked to a specific device.
+    """
+    actions = await action_dao.get_by("device_id", device_id)
+    if not actions:
+        raise HTTPException(status_code=404, detail="No actions found for the device")
+    return actions

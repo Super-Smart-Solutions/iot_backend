@@ -21,17 +21,18 @@ async def send_message(
     tag_dao: TagDAO = Depends(),
     device_dao: DeviceDAO = Depends(),
     user: User = Depends(current_active_user),
-
 ):
     """Creates Message model in the database."""
     # TODO Valid id/name helper function
 
-    tag: Tag = tag_dao.get_tag(tag_id, user.id)
-    device: Device = device_dao.get_device(device_id, user.id)
-    message.publisher = device.mainflux_thing_uuid
-    message.channel_id = tag.mainflux_channel_uuid
+    tag: Tag = await tag_dao.get_tag(tag_id, user.id)
+    device: Device = await device_dao.get_device(device_id, user.id)
+    message.publisher = device.mainflux_thing_uuid or "test"
+    message.channel_id = tag.mainflux_channel_uuid or "test"
 
-    return await message_dao.create(tag_id=tag.id, schema=message)
+    return await message_dao.create(
+        tag_id=tag.id, device_id=device.id, user_id=user.id, schema=message
+    )
 
 
 @router.get("/{tag_id}/messages")
@@ -42,5 +43,5 @@ async def read_messages(
     user: User = Depends(current_active_user),
 ):
     """Retrieves messages sent to single channel"""
-    tag: Tag = tag_dao.get_tag(tag_id, user.id)
+    tag: Tag = await tag_dao.get_tag(tag_id, user.id)
     return await message_dao.get_by("tag_id", tag.id)

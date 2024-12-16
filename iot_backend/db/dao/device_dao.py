@@ -46,7 +46,7 @@ class DeviceDAO:
             query = query.where(getattr(Device, field) == value)
             row = await self.session.scalars(query)
             response = row.all()
-        if not response:
+        if not response or None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Device Not Found."
             )
